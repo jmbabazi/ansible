@@ -1,0 +1,31 @@
+---
+  tasks:
+  - name: ensure mysql is at the latest version
+    apt:
+     name: mysql-server-5.6
+     state: latest
+#  - name: Set root password for the first time
+#    command: mysqladmin -u root password newpassword 
+  - name: The package below solves the error python mysqldb module is required which occurs when you are installing the openmrs database
+    apt:
+     name: python-mysqldb
+     state: latest
+  - name: ensure mysql is started
+    service:
+     name: mysql
+     state: running
+# install openmrs database
+  - mysql_db:
+     login_user=root
+     login_password=newpassword
+     name=openmrs 
+     encoding=utf8
+     state=present
+#source the database into openmrs
+  - copy: src=DemoDB.sql dest=/tmp
+  - mysql_db: 
+     login_user=root
+     login_password=newpassword
+     name=openmrs
+     state=import
+     target=/tmp/DemoDB.sql    
