@@ -1,17 +1,18 @@
 #!/bin/bash
 
 PWD=$(pwd)/roles
+TASKS=/tasks/main.yml
 COL_BLUE="\x1b[34;01m"
 COL_RESET="\x1b[39;49;00m"
-Blink="\e[5mBlink"
+Blink="\e[5m"
  
 deb_packages(){
-DEB_FILES="$PWD/deb_packages/tasks/main.yml"
+DEB_FILES="$PWD/deb_packages$TASKS"
 run_deb_packages_ansible="ansible-playbook $DEB_FILES"
 #check for main.yml file
 if [ -f $DEB_FILES ]; 
 then
-    echo "main.yml file found for deb_packages playbook"
+    echo "main.yml file found for deb_packages playbook" | boxes -d ian_jones
     command $run_deb_packages_ansible
 else 
    echo "main.yml not found for deb_packages playbook. exiting"
@@ -19,20 +20,20 @@ fi
 }
 
 mysql() {
-MYSQL_FILE="$PWD/mysql/tasks/main.yml"
+MYSQL_FILE="$PWD/mysql$TASKS"
 run_mysql_ansible="ansible-playbook $MYSQL_FILE"
 #check for main.yml file
 if [ -f $MYSQL_FILE ]; 
 then
-    echo "main.yml file found running mysql playbook"
+    echo "main.yml file found running mysql playbook" 
     command $run_mysql_ansible
 else 
-   echo "main.yml not found, mysql playbook not executed" >&2
+   echo "main.yml not found, mysql playbook not executed" 
 fi
 }
 
 apache2(){
-APACHE_FILE="$PWD/apache2/tasks/main.yml"
+APACHE_FILE="$PWD/apache2$TASKS"
 run_apache_ansible="ansible-playbook $MYSQL_FILE"
 #check for main.yml file
 if [ -f $APACHE_FILE ];
@@ -40,8 +41,7 @@ then
     echo "main.yml file found running the apache2 playbook"
     command $run_apache_ansible
 else
-   echo -e $COL_BLUE "\x1b[5m main.yml not found, apache2 playbook not executed" $COL_RESET
-   wait $!
+   echo -e $Blink $COL_BLUE "main.yml not found, apache2 playbook not executed" $COL_RESET | boxes -d dog
 fi
 }
 
