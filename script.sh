@@ -1,10 +1,12 @@
 #!/bin/bash
 
+PWD=$(pwd)/roles
 COL_BLUE="\x1b[34;01m"
 COL_RESET="\x1b[39;49;00m"
+Blink="\e[5mBlink"
  
 deb_packages(){
-DEB_FILES="/home/vagrant/roles/deb_packages/tasks/main.yml"
+DEB_FILES="$PWD/deb_packages/tasks/main.yml"
 run_deb_packages_ansible="ansible-playbook $DEB_FILES"
 #check for main.yml file
 if [ -f $DEB_FILES ]; 
@@ -17,7 +19,7 @@ fi
 }
 
 mysql() {
-MYSQL_FILE="/home/vagrant/roles/mysql/tasks/main.yml"
+MYSQL_FILE="$PWD/mysql/tasks/main.yml"
 run_mysql_ansible="ansible-playbook $MYSQL_FILE"
 #check for main.yml file
 if [ -f $MYSQL_FILE ]; 
@@ -30,7 +32,7 @@ fi
 }
 
 apache2(){
-APACHE_FILE="/home/vagrant/roles/apache2/tasks/main.yml"
+APACHE_FILE="$PWD/apache2/tasks/main.yml"
 run_apache_ansible="ansible-playbook $MYSQL_FILE"
 #check for main.yml file
 if [ -f $APACHE_FILE ];
@@ -38,8 +40,9 @@ then
     echo "main.yml file found running the apache2 playbook"
     command $run_apache_ansible
 else
-   echo -e $COL_BLUE "main.yml not found, apache2 playbook not executed" $COL_RESET
-   fi
+   echo -e $COL_BLUE "\x1b[5m main.yml not found, apache2 playbook not executed" $COL_RESET
+   wait $!
+fi
 }
 
 eval deb_packages
